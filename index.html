@@ -1,0 +1,22 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>TeslaTV sign-in helper</title>
+<style>body{font-family:system-ui,sans-serif;max-width:600px;margin:auto;padding:16px}input{width:100%;padding:8px;box-sizing:border-box}a.btn{display:inline-block;margin-top:12px;padding:10px 16px;background:#2563eb;color:#fff;border-radius:6px;text-decoration:none}code{word-break:break-all}</style>
+<h2>TeslaTV sign-in helper</h2>
+<p>This static page only builds the Tesla sign-in link. Nothing is sent anywhere except to Tesla when you click the button.</p>
+<label>Tesla app Client ID (not the secret)<input id=cid autocomplete=off></label>
+<p>Redirect URI (add exactly this to your Tesla app): <code id=redir></code></p>
+<a class=btn id=go href=#>Sign in with Tesla</a>
+<script>
+const redir = location.origin + '/callback/';
+document.getElementById('redir').textContent = redir;
+const cid = document.getElementById('cid');
+cid.value = localStorage.getItem('teslatv_cid') || '';
+document.getElementById('go').onclick = e => {
+  e.preventDefault();
+  if (!cid.value.trim()) { alert('Enter the Client ID first'); return; }
+  localStorage.setItem('teslatv_cid', cid.value.trim());
+  const p = new URLSearchParams({response_type:'code', client_id:cid.value.trim(), redirect_uri:redir,
+    scope:'openid offline_access vehicle_device_data', state:Math.random().toString(36).slice(2), prompt_missing_scopes:'true'});
+  location.href = 'https://auth.tesla.com/oauth2/v3/authorize?' + p;
+};
+</script>
