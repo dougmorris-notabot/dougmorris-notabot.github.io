@@ -16,7 +16,7 @@ document.getElementById('go').onclick = e => {
   if (!cid.value.trim()) { alert('Enter the Client ID first'); return; }
   localStorage.setItem('teslatv_cid', cid.value.trim());
   const p = new URLSearchParams({response_type:'code', client_id:cid.value.trim(), redirect_uri:redir,
-    scope:'openid offline_access vehicle_device_data', state:Math.random().toString(36).slice(2), prompt_missing_scopes:'true'});
+    scope:'openid offline_access vehicle_device_data vehicle_location', state:Math.random().toString(36).slice(2), prompt_missing_scopes:'true'});
   location.href = 'https://auth.tesla.com/oauth2/v3/authorize?' + p;
 };
 </script>
